@@ -18,4 +18,4 @@
 2. 순수 자바스크립트를 통한 기능 구현
 
 ## 개발 환경
-- Front : HTML / CSS
+- Front : HTML / CSS / JS
