@@ -20,10 +20,10 @@ let draggableItem = null;
 let count = 0;
 
 function generateRandomNumber() {
-    let randomNumber = ""; // 생성된 랜덤 숫자를 저장할 변수
-    const arr = ['1', '2', '3', '4', '5', '6', '7', '8', '9']; // 0을 제외한 가능한 숫자들을 담은 배열
+    let randomNumber = "";
+    const arr = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
     for (let i = 0; i < 9; i++) {
-        const j = Math.floor(Math.random() * (arr.length)); /* 0 ~ 8 */
+        const j = Math.floor(Math.random() * (arr.length)); 
         random.push(arr[j])
         arr.splice(j,1);
     }
@@ -94,7 +94,6 @@ function checkWinLose () {
 
 function dragStartEvent(event) {
     draggedItem = event.target;
-    // event.dataTransfer.setData('id', event.target.id); ?? 
 }
 
 function allowDrop(event) {
@@ -102,7 +101,6 @@ function allowDrop(event) {
 }
 
 function dropEvent(event) {
-    // event.preventDefault();
     if (event.target.tagName === 'IMG') {
 
         const temp = event.target.src;
@@ -115,22 +113,7 @@ function dropEvent(event) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* audio JS 퍼온거 */
+/* audio JS */
 
 function createTrackItem(index,name,duration){
     var trackItem = document.createElement('div');
