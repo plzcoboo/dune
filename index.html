@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dune Puzzle</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.cdnfonts.com/css/dune-rise" rel="stylesheet">
+    <link rel="icon" href="./images/favi.png">
+</head>
+<!-- <body id="body" ondragover="allowDrop(event)" ondrop="moveImg(event)"> -->
+<body id="body">
+<!-- <audio src="./video/OST.m4a" autoplay="true"></audio> -->
+  <h1>Dune puzzle</h1>
+  <div class="sun"></div>
+  <div class="dune"></div>
+
+  <audio id="myAudio" ontimeupdate="onTimeUpdate()">
+    <source id="source-audio" src="" type="audio/mpeg">
+  </audio>
+  <div class="overlay-lose"><img src="./images/lose.avif" alt="" /><span class="lose">you failed</span></div>
+  <div class="overlay-win"><img src="./images/win.webp" alt="" /><span class="lose">a winner is you</span></div>
+  <div class="life">
+    <h4 class="LifeTitle">Life count</h4>
+    <span id="LifeCount">ooo</span>
+    <div id="error"></div>
+  </div>
+  <div class="player-ctn">
+    <div class="infos-ctn">
+      <div class="timer">00:00</div>
+      <div class="title"></div>
+      <div class="duration">00:00</div>
+    </div>
+    <div id="myProgress">
+      <div id="myBar"></div>
+    </div>
+    <div class="btn-ctn">
+       <div class="btn-action first-btn" onclick="previous()">
+          <div id="btn-faws-back">
+            <i class='fas fa-step-backward'></i>
+          </div>
+       </div>
+       <div class="btn-action" onclick="rewind()">
+          <div id="btn-faws-rewind">
+            <i class='fas fa-backward'></i>
+          </div>
+       </div>
+       <div class="btn-action" onclick="toggleAudio()">
+          <div id="btn-faws-play-pause">
+            <i class='fas fa-play' id="icon-play"></i>
+            <i class='fas fa-pause' id="icon-pause" style="display: none"></i>
+          </div>
+       </div>
+       <div class="btn-play" onclick="forward()">
+          <div id="btn-faws-forward">
+            <i class='fas fa-forward'></i>
+          </div>
+       </div>
+       <div class="btn-action" onclick="next()">
+          <div id="btn-faws-next">
+            <i class='fas fa-step-forward'></i>
+          </div>
+       </div>
+       <div class="btn-mute" id="toggleMute" onclick="toggleMute()">
+          <div id="btn-faws-volume">
+            <i id="icon-vol-up" class='fas fa-volume-up'></i>
+            <i id="icon-vol-mute" class='fas fa-volume-mute' style="display: none"></i>
+          </div>
+       </div>
+    </div>
+    <div class="playlist-ctn"></div>
+  </div>
+
+  <div class="ChooseWrap">
+    <h2>Choose your images</h2>
+    <div class="ChooseBox">
+      <img src="./images/dune0.jpg" alt="poster" id="first" onclick="clickImgPuzzle(0)">
+      <img src="./images/dune1.jpg" alt="poster" id="second" onclick="clickImgPuzzle(1)">
+      <img src="./images/dune2.jpg" alt="poster" id="third" onclick="clickImgPuzzle(2)">
+    </div>
+  </div>
+  <div class="GameBoxWrap">
+      <!-- <div id="StartBox" ondragover="allowDrop(event)" ondrop="dropEvent(event)"  > -->
+      <div id="StartBox">
+        <h3>Puzzle</h3>
+        <!--   <img src="./images/dune_1.jpg" alt="">
+          <img src="./images/dune_2.jpg" alt="">
+          <img src="./images/dune_3.jpg" alt="">
+          <img src="./images/dune_4.jpg" alt="">
+          <img src="./images/dune_5.jpg" alt="">
+          <img src="./images/dune_6.jpg" alt="">
+          <img src="./images/dune_7.jpg" alt="">
+          <img src="./images/dune_8.jpg" alt="">
+          <img src="./images/dune_9.jpg" alt=""> -->
+      </div>
+      <!-- <div id="AnswerBox" ondragover="allowDrop(event)" ondrop="dropEvent(event)"> -->
+      <div id="AnswerBox">
+          <h3>Answer<span class="confirm" onclick="checkWinLose()">confirm</span></h3>
+        <!--   <img src="./images/dune_1.jpg" alt="">
+          <img src="./images/dune_2.jpg" alt="">
+          <img src="./images/dune_3.jpg" alt="">
+          <img src="./images/dune_4.jpg" alt="">
+          <img src="./images/dune_5.jpg" alt="">
+          <img src="./images/dune_6.jpg" alt="">
+          <img src="./images/dune_7.jpg" alt="">
+          <img src="./images/dune_8.jpg" alt="">
+          <img src="./images/dune_9.jpg" alt=""> -->
+      </div>
+  </div>
+  <script src="https://kit.fontawesome.com/a062562745.js" crossorigin="anonymous"></script>
+  <script src="./js/index.js"></script>
+</body>
+</html>
