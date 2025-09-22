@@ -80,31 +80,18 @@
     </div>
   </div>
   <div class="GameBoxWrap">
-      <!-- <div id="StartBox" ondragover="allowDrop(event)" ondrop="dropEvent(event)"  > -->
       <div id="StartBox">
-        <h3>Puzzle</h3>
-        <!--   <img src="./images/dune_1.jpg" alt="">
-          <img src="./images/dune_2.jpg" alt="">
-          <img src="./images/dune_3.jpg" alt="">
-          <img src="./images/dune_4.jpg" alt="">
-          <img src="./images/dune_5.jpg" alt="">
-          <img src="./images/dune_6.jpg" alt="">
-          <img src="./images/dune_7.jpg" alt="">
-          <img src="./images/dune_8.jpg" alt="">
-          <img src="./images/dune_9.jpg" alt=""> -->
+        <div class="box-heading">
+          <h3>Puzzle</h3>
+        </div>
+        <div class="tile-grid" id="StartTiles"></div>
       </div>
-      <!-- <div id="AnswerBox" ondragover="allowDrop(event)" ondrop="dropEvent(event)"> -->
       <div id="AnswerBox">
-          <h3>Answer<span class="confirm" onclick="checkWinLose()">confirm</span></h3>
-        <!--   <img src="./images/dune_1.jpg" alt="">
-          <img src="./images/dune_2.jpg" alt="">
-          <img src="./images/dune_3.jpg" alt="">
-          <img src="./images/dune_4.jpg" alt="">
-          <img src="./images/dune_5.jpg" alt="">
-          <img src="./images/dune_6.jpg" alt="">
-          <img src="./images/dune_7.jpg" alt="">
-          <img src="./images/dune_8.jpg" alt="">
-          <img src="./images/dune_9.jpg" alt=""> -->
+        <div class="box-heading">
+          <h3>Answer</h3>
+          <button type="button" class="confirm" id="confirmButton">confirm</button>
+        </div>
+        <div class="tile-grid" id="AnswerTiles"></div>
       </div>
   </div>
   <script src="https://kit.fontawesome.com/a062562745.js" crossorigin="anonymous"></script>
