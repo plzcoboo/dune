@@ -11,6 +11,7 @@ const error = document.getElementById('error');
 const overlayLose = document.querySelector('.overlay-lose');
 const overlayWin = document.querySelector('.overlay-win');
 const chooseWrap = document.querySelector('.ChooseWrap');
+const gameStage = document.querySelector('.game-stage');
 const gameBoxWrap = document.querySelector('.GameBoxWrap');
 const musicPlayer = document.querySelector('.player-ctn');
 const lifeCountbox = document.querySelector('.life');
@@ -79,9 +80,13 @@ function resetGameState() {
 
 function clickImgPuzzle(num) {
   chooseWrap.style.display = 'none';
-  gameBoxWrap.style.display = 'flex';
+  if (gameStage) {
+    gameStage.style.display = 'grid';
+    gameStage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  gameBoxWrap.style.display = 'grid';
   musicPlayer.style.display = 'block';
-  lifeCountbox.style.display = 'block';
+  lifeCountbox.style.display = 'flex';
 
   resetGameState();
 

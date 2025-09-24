@@ -6,13 +6,13 @@
 
 body {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   background: #000;
-  overflow: hidden;
-  overflow-x: hidden;
   font-family: 'Dune Rise', sans-serif;
   color: #fff;
-  margin-top: 10px;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 30px 0 120px;
 }
 
 h1 {
@@ -60,6 +60,27 @@ h1 {
   filter: blur(0);
 }
 
+.game-stage {
+  display: none;
+  width: min(1200px, 92%);
+  margin: 48px auto 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+
+.board-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.player-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
 #myProgress {
   width: 420px;
   background-color: #d9d9f2;
@@ -75,26 +96,22 @@ h1 {
 }
 
 .GameBoxWrap {
-  display: none;
-  position: absolute;
-  top: 46%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  justify-content: center;
-  align-items: flex-start;
-  gap: 260px;
-  z-index: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  justify-items: center;
 }
 
 #StartBox,
 #AnswerBox {
-  position: relative;
-  width: 320px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 360px;
+  margin: 0;
   border: 1px solid #ffc266;
   text-align: center;
-  padding: 20px 24px 24px;
-  border-radius: 10px;
+  padding: 24px 24px 28px;
+  border-radius: 12px;
   background: #ffc266;
   color: #1c1407;
   display: flex;
@@ -105,15 +122,19 @@ h1 {
 
 #StartBox h3,
 #AnswerBox h3 {
-  position: absolute;
-  top: -36px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
+  margin: 0 0 16px;
   font-size: 24px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: #6d3c01;
+}
+
+#AnswerBox h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .tile-grid {
@@ -146,7 +167,6 @@ h1 {
   color: greenyellow;
   cursor: pointer;
   font-size: 22px;
-  margin-left: 50px;
   transition: color 0.2s ease, opacity 0.2s ease;
 }
 
@@ -169,14 +189,13 @@ h1 {
   text-align: center;
 }
 
+
 .life {
-  position: absolute;
-  left: 50%;
-  top: 10%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  font-size: 26px;
   display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 24px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: #ffc266;
@@ -320,11 +339,10 @@ h1 {
 
 .player-ctn {
   border-radius: 15px;
-  width: 420px;
-  padding: 20px 22px;
+  width: min(420px, 100%);
+  padding: 24px 22px;
   background-color: #373737;
-  margin: auto;
-  margin-top: 135px;
+  margin: 0 auto;
   display: none;
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.35);
 }
@@ -511,66 +529,64 @@ h1 {
   transform: translateY(0);
 }
 
-@media (max-width: 1180px) {
+@media (min-width: 760px) {
   .GameBoxWrap {
-    gap: 200px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 1024px) {
-  .GameBoxWrap {
-    gap: 140px;
+@media (min-width: 1024px) {
+  .game-stage {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
   }
 
-  #StartBox,
-  #AnswerBox {
-    width: 300px;
+  .board-stage {
+    align-items: flex-start;
   }
 
-  .tile-grid img {
-    width: 94px;
-    height: 141px;
+  .player-stage {
+    justify-content: flex-end;
+  }
+
+  .life {
+    align-items: flex-start;
+    text-align: left;
   }
 }
 
 @media (max-width: 900px) {
-  .GameBoxWrap {
-    gap: 100px;
-  }
-
-  #StartBox,
-  #AnswerBox {
-    width: 280px;
-  }
-
-  .tile-grid img {
-    width: 88px;
-    height: 132px;
+  h1 {
+    width: auto;
+    margin: 30px auto 0;
+    text-align: center;
   }
 }
 
 @media (max-width: 768px) {
   body {
-    overflow-y: auto;
-    margin-top: 20px;
+    padding: 24px 0 80px;
   }
 
   h1 {
-    width: auto;
     font-size: 54px;
-    margin: 30px auto 0;
-    text-align: center;
+  }
+
+  .game-stage {
+    margin: 40px auto 80px;
+    gap: 32px;
+  }
+
+  .board-stage {
+    gap: 24px;
   }
 
   .life {
-    position: static;
-    transform: none;
-    margin: 20px auto 0;
+    margin: 0 auto;
   }
 
   .player-ctn {
-    position: static;
-    margin: 30px auto 0;
+    margin: 0 auto;
     width: min(92%, 420px);
   }
 
@@ -600,30 +616,10 @@ h1 {
   }
 
   .GameBoxWrap {
-    position: static;
-    transform: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 36px;
-    width: 100%;
-    margin: 40px auto 80px;
-    padding: 0 16px;
-  }
-
-  #StartBox,
-  #AnswerBox {
-    width: min(360px, 100%);
-  }
-
-  #StartBox h3,
-  #AnswerBox h3 {
-    position: static;
-    transform: none;
-    margin-bottom: 12px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .confirm {
-    margin-left: 0;
     margin-top: 8px;
     font-size: 18px;
     display: inline-block;
@@ -660,26 +656,5 @@ h1 {
   .confirm {
     width: 100%;
     text-align: center;
-  }
-}
-
-@media (max-height: 1400px) {
-  h1 {
-    font-size: 40px;
-  }
-
-  .player-ctn {
-    position: absolute;
-    left: 49%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 99;
-    scale: 0.9;
-  }
-}
-
-@media (max-height: 950px) {
-  .player-ctn {
-    top: 60%;
   }
 }
