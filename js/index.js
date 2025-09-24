@@ -1,136 +1,224 @@
-let random = []
-let answer = []
-let body = document.getElementById('body')
-let startBox = document.getElementById('StartBox')
-let lifeCount = document.getElementById('LifeCount')
-let answerBox = document.getElementById('AnswerBox')
-let error = document.getElementById('error')
-let overlayLose = document.querySelector('.overlay-lose')
-let overlayWin = document.querySelector('.overlay-win')
-let chooseWrap = document.querySelector('.ChooseWrap')
-let gameBoxWrap = document.querySelector('.GameBoxWrap')
-let musicPlayer = document.querySelector('.player-ctn')
-let submit = document.querySelector('.submit')
-let lifeCountbox = document.querySelector('.life')
-let lifeTitle = document.querySelector('.LifeTitle')
-let src = ''
-let startImg = ''
+const SOLUTION_ORDER = Array.from({ length: 9 }, (_, idx) => idx + 1);
+
+let currentShuffle = [];
 let draggedItem = null;
-let draggableItem = null;
 let count = 0;
 
-function generateRandomNumber() {
-    let randomNumber = ""; // 생성된 랜덤 숫자를 저장할 변수
-    const arr = ['1', '2', '3', '4', '5', '6', '7', '8', '9']; // 0을 제외한 가능한 숫자들을 담은 배열
-    for (let i = 0; i < 9; i++) {
-        const j = Math.floor(Math.random() * (arr.length)); /* 0 ~ 8 */
-        random.push(arr[j])
-        arr.splice(j,1);
-    }
-    for (let i = 0; i < 9; i++) {
-        randomNumber += random[i]; 
-    }
-    return randomNumber;
+const startTiles = document.getElementById('StartTiles');
+const answerTiles = document.getElementById('AnswerTiles');
+const lifeCount = document.getElementById('LifeCount');
+const error = document.getElementById('error');
+const overlayLose = document.querySelector('.overlay-lose');
+const overlayWin = document.querySelector('.overlay-win');
+const chooseWrap = document.querySelector('.ChooseWrap');
+const gameStage = document.querySelector('.game-stage');
+const gameBoxWrap = document.querySelector('.GameBoxWrap');
+const musicPlayer = document.querySelector('.player-ctn');
+const lifeCountbox = document.querySelector('.life');
+const lifeTitle = document.querySelector('.LifeTitle');
+const confirmButton = document.getElementById('confirmButton');
+
+function generateRandomOrder() {
+  const pool = [...SOLUTION_ORDER];
+  const order = [];
+  while (pool.length) {
+    const index = Math.floor(Math.random() * pool.length);
+    order.push(pool.splice(index, 1)[0]);
+  }
+  return order;
 }
 
-generateRandomNumber()
-
-function setImgAttribute (img) {
-  img.setAttribute('ondragstart','dragStartEvent(event)')
-  img.setAttribute('ondragover', 'allowDrop(event)')
-  img.setAttribute('ondrop', 'dropEvent(event)')
-  img.setAttribute('draggable','true')
+function setImgAttribute(img) {
+  img.setAttribute('ondragstart', 'dragStartEvent(event)');
+  img.setAttribute('ondragover', 'allowDrop(event)');
+  img.setAttribute('ondrop', 'dropEvent(event)');
+  img.setAttribute('draggable', 'true');
 }
 
-function makeQuestionImg() {
-  for(let i = 1; i <= 9; i++) {
-    let img = document.createElement('img');
-    img.setAttribute('src', './images/question.jpg')
-    img.setAttribute('id', `${i*100}`)
-    img.setAttribute('value', `Question`)
-    setImgAttribute (img)
-    answerBox.appendChild(img)
-    answer.push(i)
+function buildQuestionTiles() {
+  answerTiles.innerHTML = '';
+  SOLUTION_ORDER.forEach((value) => {
+    const img = document.createElement('img');
+    img.setAttribute('src', './images/question.jpg');
+    img.setAttribute('id', `${value * 100}`);
+    img.setAttribute('value', 'Question');
+    setImgAttribute(img);
+    answerTiles.appendChild(img);
+  });
+}
+
+function renderPuzzleTiles(num) {
+  startTiles.innerHTML = '';
+  currentShuffle.forEach((value) => {
+    const img = document.createElement('img');
+    img.setAttribute('src', `./images/dune${num}_${value}.jpg`);
+    img.setAttribute('id', `${value}`);
+    img.className = `Dune${value}`;
+    setImgAttribute(img);
+    startTiles.appendChild(img);
+  });
+}
+
+function resetGameState() {
+  count = 0;
+  draggedItem = null;
+  error.style.display = 'none';
+  error.innerHTML = '';
+  lifeCount.innerHTML = 'ooo';
+  lifeTitle.style.color = '';
+  lifeTitle.innerHTML = 'Life count';
+  overlayLose.classList.remove('is-open');
+  overlayWin.classList.remove('is-open');
+
+  if (confirmButton) {
+    confirmButton.classList.remove('is-disabled');
+    confirmButton.textContent = 'confirm';
+    confirmButton.setAttribute('aria-disabled', 'false');
+    confirmButton.setAttribute('tabindex', '0');
   }
 }
 
 function clickImgPuzzle(num) {
-  chooseWrap.style.display = 'none'
-  gameBoxWrap.style.display = 'flex'
-  musicPlayer.style.display = 'block'
-  lifeCountbox.style.display = 'block'
-
-  for(let i = 0; i < 9; i++) {
-    let img = document.createElement('img');
-    img.setAttribute('src', `./images/dune${num}_${random[i]}.jpg`)
-    img.setAttribute('id', `${random[i]}`)
-    img.setAttribute('className', `Dune${random[i]}`)
-    setImgAttribute(img)
-    startBox.appendChild(img)
+  chooseWrap.style.display = 'none';
+  if (gameStage) {
+    gameStage.style.display = 'grid';
+    gameStage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-  makeQuestionImg ()
+  gameBoxWrap.style.display = 'grid';
+  musicPlayer.style.display = 'block';
+  lifeCountbox.style.display = 'flex';
+
+  resetGameState();
+
+  currentShuffle = generateRandomOrder();
+  buildQuestionTiles();
+  renderPuzzleTiles(num);
 }
 
+function getAnswerImages() {
+  return Array.from(answerTiles.querySelectorAll('img'));
+}
 
-function checkWinLose () {
-  let puzzleAnswer = []
-  let QuestionImgInclude = [...answerBox.children] 
-  /* 배열 메소드를 사용하지 못해서 새로운 배열로 생성 */
-  QuestionImgInclude.splice(0,1)
-  let checkQuestion = []
-  QuestionImgInclude.forEach ((item) => checkQuestion.push(item.id))
-  checkQuestion.forEach(item => parseInt(item) < 100 ? checkQuestion.push(true) : checkQuestion.push(false))
-  if(checkQuestion.includes(false)) {error.style.display = 'block',error.innerHTML = 'fill the answer box !'} 
-  else
-  {
-      let checkAnswer = [...answerBox.children]
-      checkAnswer.splice(0,1)
-      checkAnswer.forEach((item,idx) => parseInt(item.id) === parseInt(answer[idx]) ? puzzleAnswer.push('ok') : puzzleAnswer.push('no'))
-      puzzleAnswer.includes('no') ? (error.style.display = 'block',error.innerHTML = 'try again',count++,lifeCount.innerHTML = lifeCount.innerHTML.slice(0,-1)) : overlayWin.classList.add('is-open')
-      count === 3 && (lifeTitle.style.color = 'red',lifeTitle.innerHTML = 'Last Chance')
-      count > 3 && overlayLose.classList.add('is-open')
+function isAnswerBoxFilled() {
+  return getAnswerImages().every((item) => parseInt(item.id, 10) < 100);
+}
+
+function isPuzzleSolved() {
+  const answerImages = getAnswerImages();
+  return answerImages.length === SOLUTION_ORDER.length &&
+    answerImages.every((item, idx) => parseInt(item.id, 10) === SOLUTION_ORDER[idx]);
+}
+
+function handleSolved() {
+  if (overlayWin.classList.contains('is-open')) {
+    return;
   }
+
+  error.style.display = 'none';
+  overlayWin.classList.add('is-open');
+
+  if (confirmButton) {
+    confirmButton.classList.add('is-disabled');
+    confirmButton.textContent = '완료';
+    confirmButton.setAttribute('aria-disabled', 'true');
+    confirmButton.setAttribute('tabindex', '-1');
+  }
+}
+
+function evaluatePuzzle(isAutoCheck = false) {
+  if (!isAnswerBoxFilled()) {
+    if (!isAutoCheck) {
+      error.style.display = 'block';
+      error.innerHTML = 'fill the answer box !';
+    }
+    return false;
+  }
+
+  if (isPuzzleSolved()) {
+    handleSolved();
+    return true;
+  }
+
+  if (!isAutoCheck) {
+    error.style.display = 'block';
+    error.innerHTML = 'try again';
+    count++;
+    if (lifeCount.innerHTML.length > 0) {
+      lifeCount.innerHTML = lifeCount.innerHTML.slice(0, -1);
+    }
+    if (count === 3) {
+      lifeTitle.style.color = 'red';
+      lifeTitle.innerHTML = 'Last Chance';
+    }
+    if (count > 3) {
+      overlayLose.classList.add('is-open');
+      if (confirmButton) {
+        confirmButton.classList.add('is-disabled');
+        confirmButton.setAttribute('aria-disabled', 'true');
+        confirmButton.setAttribute('tabindex', '-1');
+      }
+    }
+  }
+
+  return false;
+}
+
+function checkWinLose() {
+  evaluatePuzzle(false);
+}
+
+if (confirmButton) {
+  confirmButton.addEventListener('click', () => {
+    if (confirmButton.classList.contains('is-disabled')) {
+      return;
+    }
+    checkWinLose();
+  });
+
+  confirmButton.addEventListener('keydown', (event) => {
+    if (confirmButton.classList.contains('is-disabled')) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      checkWinLose();
+    }
+  });
 }
 
 function dragStartEvent(event) {
-    draggedItem = event.target;
-    // event.dataTransfer.setData('id', event.target.id); ?? 
+  draggedItem = event.target;
 }
 
 function allowDrop(event) {
-    event.preventDefault();
+  event.preventDefault();
 }
 
 function dropEvent(event) {
-    // event.preventDefault();
-    if (event.target.tagName === 'IMG') {
+  event.preventDefault();
 
-        const temp = event.target.src;
-        event.target.src = draggedItem.src;
-        draggedItem.src = temp;
+  if (event.target.tagName !== 'IMG' || !draggedItem) {
+    return;
+  }
 
-        const tempValue = event.target.getAttribute('id');
-        event.target.setAttribute('id', draggedItem.getAttribute('id'));
-        draggedItem.setAttribute('id', tempValue);
-    }
+  if (event.target === draggedItem) {
+    draggedItem = null;
+    return;
+  }
+
+  const tempSrc = event.target.src;
+  event.target.src = draggedItem.src;
+  draggedItem.src = tempSrc;
+
+  const tempValue = event.target.getAttribute('id');
+  event.target.setAttribute('id', draggedItem.getAttribute('id'));
+  draggedItem.setAttribute('id', tempValue);
+
+  evaluatePuzzle(true);
+  draggedItem = null;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* audio JS 퍼온거 */
+/* audio JS */
 
 function createTrackItem(index,name,duration){
     var trackItem = document.createElement('div');
