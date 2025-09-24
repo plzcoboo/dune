@@ -11,7 +11,6 @@ const error = document.getElementById('error');
 const overlayLose = document.querySelector('.overlay-lose');
 const overlayWin = document.querySelector('.overlay-win');
 const chooseWrap = document.querySelector('.ChooseWrap');
-const gameStage = document.querySelector('.game-stage');
 const gameBoxWrap = document.querySelector('.GameBoxWrap');
 const musicPlayer = document.querySelector('.player-ctn');
 const lifeCountbox = document.querySelector('.life');
@@ -53,7 +52,7 @@ function renderPuzzleTiles(num) {
     const img = document.createElement('img');
     img.setAttribute('src', `./images/dune${num}_${value}.jpg`);
     img.setAttribute('id', `${value}`);
-    img.setAttribute('className', `Dune${value}`);
+    img.className = `Dune${value}`;
     setImgAttribute(img);
     startTiles.appendChild(img);
   });
@@ -71,20 +70,18 @@ function resetGameState() {
   overlayWin.classList.remove('is-open');
 
   if (confirmButton) {
-    confirmButton.disabled = false;
     confirmButton.classList.remove('is-disabled');
     confirmButton.textContent = 'confirm';
+    confirmButton.setAttribute('aria-disabled', 'false');
+    confirmButton.setAttribute('tabindex', '0');
   }
 }
 
 function clickImgPuzzle(num) {
   chooseWrap.style.display = 'none';
-  if (gameStage) {
-    gameStage.classList.add('is-active');
-  }
-  gameBoxWrap.classList.add('is-active');
-  musicPlayer.classList.add('is-visible');
-  lifeCountbox.classList.add('is-active');
+  gameBoxWrap.style.display = 'flex';
+  musicPlayer.style.display = 'block';
+  lifeCountbox.style.display = 'block';
 
   resetGameState();
 
@@ -116,9 +113,10 @@ function handleSolved() {
   overlayWin.classList.add('is-open');
 
   if (confirmButton) {
-    confirmButton.disabled = true;
     confirmButton.classList.add('is-disabled');
     confirmButton.textContent = '완료';
+    confirmButton.setAttribute('aria-disabled', 'true');
+    confirmButton.setAttribute('tabindex', '-1');
   }
 }
 
@@ -150,8 +148,9 @@ function evaluatePuzzle(isAutoCheck = false) {
     if (count > 3) {
       overlayLose.classList.add('is-open');
       if (confirmButton) {
-        confirmButton.disabled = true;
         confirmButton.classList.add('is-disabled');
+        confirmButton.setAttribute('aria-disabled', 'true');
+        confirmButton.setAttribute('tabindex', '-1');
       }
     }
   }
@@ -164,7 +163,22 @@ function checkWinLose() {
 }
 
 if (confirmButton) {
-  confirmButton.addEventListener('click', checkWinLose);
+  confirmButton.addEventListener('click', () => {
+    if (confirmButton.classList.contains('is-disabled')) {
+      return;
+    }
+    checkWinLose();
+  });
+
+  confirmButton.addEventListener('keydown', (event) => {
+    if (confirmButton.classList.contains('is-disabled')) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      checkWinLose();
+    }
+  });
 }
 
 function dragStartEvent(event) {
